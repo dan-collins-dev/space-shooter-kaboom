@@ -13,6 +13,8 @@ kaboom({
 
 // Loading the player sprite
 loadSprite("playerShip", "./assets/sprites/playerShip.png");
+loadSprite("laser", "./assets/sprites/laser.png");
+
 
 const player = add([
     sprite("playerShip"),
@@ -24,9 +26,28 @@ const player = add([
     "player",
     {
         speed: 240,
-        offset: 24
-    }
+        offset: 24,
+    },
+    
+    
 ]);
+
+
+
+const spawnLaser = (playerPos) => {
+    add([
+        sprite("laser"),
+        scale(2),
+        anchor("center"),
+        pos(playerPos.x, playerPos.y - 25),
+        area(),
+        "projectile",
+        {
+            onCoolDown: false,
+        },
+        move(UP, 200),
+    ])
+}
 
 onKeyDown("a", () => {
     if (player.pos.x <= player.offset) player.pos.x = player.offset
@@ -36,4 +57,13 @@ onKeyDown("a", () => {
 onKeyDown("d", () => {
     if (player.pos.x >= gameWidth - player.offset) player.pos.x = gameWidth - player.offset
     else player.move(player.speed, 0)
+})
+
+onKeyRelease("space", () => {
+    if (!player.onCoolDown) {
+        player.onCoolDown = true;
+        spawnLaser(player.pos)
+    } else {
+        wait(0.25, () => player.onCoolDown = false)
+    }
 })
