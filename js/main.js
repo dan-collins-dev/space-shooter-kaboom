@@ -2,7 +2,8 @@ const gameWidth = 480;
 const gameHeight = 640;
 let score = 0;
 let enemySpawnDelay = 3;
-let fireDelay = 0.25
+let fireDelay = 0.25;
+let dmgShakeFactor = 25;
 
 // Initialize Kaboom context
 kaboom({
@@ -12,6 +13,7 @@ kaboom({
     canvas: document.querySelector("#mycanvas"),
     background: [0, 0, 0],
     debug: true,
+    // scale: 2
 });
 
 // Loading the player sprite
@@ -30,6 +32,7 @@ const player = add([
         speed: 240,
         offset: 24,
     },
+    health(3),
 ]);
 
 const spawnLaser = (playerPos) => {
@@ -44,12 +47,12 @@ const spawnLaser = (playerPos) => {
             onCoolDown: false,
         },
         move(UP, 200),
+        fixed(),
     ]);
 };
 
 const spawnEnemy = () => {
     loop(enemySpawnDelay, () => {
-        console.log("Creating enemy");
         add([
             sprite("enemyShip"),
             scale(3),
@@ -89,7 +92,16 @@ onKeyRelease("space", () => {
 });
 
 player.onCollide("enemy", (e) => {
-    shake(50);
-})
+    shake(dmgShakeFactor);
+    player.hurt(1);
+});
+
+player.on("hurt", () => {
+    console.log("OUCH");
+});
+
+player.on("death", () => {
+    destroy(player);
+});
 
 spawnEnemy();
