@@ -51,6 +51,18 @@ let mainMenu = scene("MainMenu", () => {
 
 // Main Gameplay Scene
 let gameplay = scene("Game", () => {
+    let enemyMinSpeed = 75;
+    let enemyMaxSpeed = 100;
+
+    const enemySpeedTimer = add([
+        timer(),
+    ])
+
+    enemySpeedTimer.loop(60, () => {
+        enemyMinSpeed += 25
+        enemyMaxSpeed += 50
+    })
+
     const scoreBG = add([
         pos(center().x, 16), 
         rect(width(), 32), 
@@ -135,7 +147,7 @@ let gameplay = scene("Game", () => {
                     alive: true,
                 },
                 offscreen({ destroy: true }),
-                move(DOWN, randi(100, 150)),
+                move(DOWN, randi(enemyMinSpeed, enemyMaxSpeed)),
                 fixed(),
             ]);
 
