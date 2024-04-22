@@ -4,6 +4,7 @@ let score = 0;
 let enemySpawnDelay = 3;
 let fireDelay = 0.25;
 let dmgShakeFactor = 25;
+let isAlive = true;
 
 // Initialize Kaboom context
 kaboom({
@@ -23,25 +24,34 @@ loadSprite("playerShip", "./assets/sprites/playerShip.png");
 loadSprite("laser", "./assets/sprites/laser.png");
 loadSprite("enemyShip", "./assets/sprites/enemyShip.png");
 
+// Load Sounds
+loadSound("duck", "./assets/sounds/a-duck-walks-into-a-barn.ogg");
+
 // Load font
-loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf")
+loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");
 
 // Main Menu Scene
 let mainMenu = scene("MainMenu", () => {
     const titleMsg = add([
         text("TEST", {
             size: 32,
-            font: "PressStart2P"
+            font: "PressStart2P",
         }),
         anchor("center"),
         pos(center().x, 160),
-    ])
-})
+    ]);
 
+    onKeyDown("enter", () => {
+        go("Game");
+    });
+});
 
+// debug.inspect = true
+// volume(.01)
 
 // Main Gameplay Scene
 let gameplay = scene("Game", () => {
+    // play("duck", {loop: true});
     const player = add([
         sprite("playerShip"),
         scale(3),
@@ -57,7 +67,7 @@ let gameplay = scene("Game", () => {
     ]);
 
     const spawnLaser = (playerPos) => {
-        add([
+        let laser = add([
             sprite("laser"),
             scale(2),
             anchor("center"),
@@ -69,7 +79,16 @@ let gameplay = scene("Game", () => {
             },
             move(UP, 200),
             fixed(),
+            offscreen({destroy: true})
         ]);
+
+        laser.onCollide("enemy", (enemy) => {
+            enemy.alive = false
+            destroy(enemy);
+            score += 1;
+            console.log(score);
+            destroy(laser);
+        });
     };
 
     const spawnEnemy = () => {
@@ -85,16 +104,16 @@ let gameplay = scene("Game", () => {
                 {
                     speed: 240,
                     offset: 24,
+                    alive: true
                 },
+                offscreen({destroy: true}),
                 move(DOWN, randi(100, 150)),
                 fixed(),
             ]);
-            e.onCollide("projectile", (p) => {
-                destroy(e);
-                score += 1;
-                console.log(score)
-                destroy(p);
-            });
+
+            e.onDestroy(() => {
+                if (e.alive) score -= 1
+            })
         });
     };
 
@@ -110,7 +129,7 @@ let gameplay = scene("Game", () => {
     });
 
     onKeyRelease("space", () => {
-        if (!player.onCoolDown) {
+        if (!player.onCoolDown && isAlive) {
             player.onCoolDown = true;
             spawnLaser(player.pos);
         } else {
@@ -128,11 +147,20 @@ let gameplay = scene("Game", () => {
     });
 
     player.on("death", () => {
+        isAlive = false;
         destroy(player);
     });
 
     spawnEnemy();
+
+    toggleDebug = () => {
+        if (debug.inspect === true) {
+            debug.inspect = false;
+        } else {
+            debug.inspect = true;
+        }
+    };
+    onKeyRelease("1", toggleDebug);
 });
 
-// go("MainMenu");
-go("Game")
+go("MainMenu");
