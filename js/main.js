@@ -33,7 +33,7 @@ loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");
 let mainMenu = scene("MainMenu", () => {
     const titleMsg = add([
         text("Infinity Shot", {
-            size: 8, //32,
+            size: 8,
             font: "PressStart2P",
         }),
         anchor("center"),
@@ -46,14 +46,14 @@ let mainMenu = scene("MainMenu", () => {
     // titleMsg.onStateEnter("zoom", async () => {
     //     await tween(
     //         titleMsg.textSize,
-    //     32,
-    //     1,
-    //     (currentSize) => titleMsg.textSize = currentSize,
-    //     easings.linear
+        // 32,
+        // 1,
+        // (currentSize) => titleMsg.textSize = currentSize,
+        // easings.linear
     //     )
     // })
     
-    async = titleMsg.tween(
+    titleMsg.tween(
         titleMsg.textSize,
         32,
         1,
@@ -75,13 +75,13 @@ let mainMenu = scene("MainMenu", () => {
     });
 });
 
-// debug.inspect = true
-// volume(.01)
 
 // Main Gameplay Scene
 let gameplay = scene("Game", () => {
     let enemyMinSpeed = 75;
     let enemyMaxSpeed = 100;
+
+
 
     const enemySpeedTimer = add([
         timer(),
@@ -113,14 +113,41 @@ let gameplay = scene("Game", () => {
         pos(center().x, 16),
         z(1),
         fixed(),
+        timer(),
+        "score",
+        state("idle", ["idle","expand","shrink"])
     ]);
 
-    // onUpdate("scoreLabel", () => {
-    // })
-    
-    onUpdate(()=> {
-        scoreLabel.text = `Score: ${score}`
-        if (score < 0) go("MainMenu")
+    scoreLabel.onStateEnter("expand", async () => {
+        await tween(
+            scoreLabel.textSize,
+            24,
+            0.125,
+            (currentSize) => scoreLabel.textSize = currentSize,
+            easings.easeInCubic
+        )
+        scoreLabel.enterState("idle");
+    })
+
+    scoreLabel.onStateEnter("idle", async () => {
+        await tween(
+            scoreLabel.textSize,
+            16,
+            0.5,
+            (currentSize) => scoreLabel.textSize = currentSize,
+            easings.easeInCubic
+        )
+    })
+
+    scoreLabel.onStateEnter("shrink", async () => {
+        await tween(
+            scoreLabel.textSize,
+            8,
+            0.125,
+            (currentSize) => scoreLabel.textSize = currentSize,
+            easings.easeInCubic
+        )
+        scoreLabel.enterState("idle");
     })
 
     const player = add([
@@ -136,6 +163,7 @@ let gameplay = scene("Game", () => {
             alive: true
         },
         health(3),
+        timer(),
     ]);
 
     const spawnLaser = (playerPos) => {
@@ -157,7 +185,7 @@ let gameplay = scene("Game", () => {
         laser.onCollide("enemy", (enemy) => {
             enemy.alive = false;
             destroy(enemy);
-            score += 1;
+            scoreLabel.trigger("scoreUp")
             destroy(laser);
         });
     };
@@ -183,10 +211,24 @@ let gameplay = scene("Game", () => {
             ]);
 
             e.onDestroy(() => {
-                if (e.alive && player.alive) score -= 1;
+                if (e.alive && player.alive) {
+                    scoreLabel.trigger("scoreDown")
+                }
             });
         });
     };
+
+    scoreLabel.on("scoreUp", () => {
+        score += 1;
+        scoreLabel.text = `Score: ${score}`;
+        scoreLabel.enterState("expand")
+    })
+
+    scoreLabel.on("scoreDown", () => {
+        score -= 1;
+        scoreLabel.text = `Score: ${score}`;
+        scoreLabel.enterState("shrink");
+    })
 
     onKeyDown("a", () => {
         if (player.pos.x <= player.offset) player.pos.x = player.offset;
@@ -204,7 +246,7 @@ let gameplay = scene("Game", () => {
             player.onCoolDown = true;
             spawnLaser(player.pos);
         } else {
-            wait(fireDelay, () => (player.onCoolDown = false));
+            player.wait(fireDelay, () => (player.onCoolDown = false));
         }
     });
 
