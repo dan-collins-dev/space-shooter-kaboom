@@ -1,5 +1,6 @@
 import { k, loadAssets } from "./modules/init.js"
 import { createPlayer } from "./modules/player.js";
+import { createEnemy, increaseEnemySpeed } from "./modules/enemy.js";
 
 
 loadAssets()
@@ -67,18 +68,15 @@ let mainMenu = scene("MainMenu", () => {
 
 // Main Gameplay Scene
 let gameplay = scene("Game", () => {
-    let enemyMinSpeed = 75;
-    let enemyMaxSpeed = 100;
-
     const player = createPlayer()
+
 
     const enemySpeedTimer = add([
         timer(),
     ])
 
-    enemySpeedTimer.loop(30, () => {
-        enemyMinSpeed += 25
-        enemyMaxSpeed += 50
+    enemySpeedTimer.loop(5, () => {
+        increaseEnemySpeed();
     })
 
     const scoreBG = add([
@@ -165,29 +163,7 @@ let gameplay = scene("Game", () => {
 
     const spawnEnemy = () => {
         loop(enemySpawnDelay, () => {
-            let e = add([
-                sprite("enemyShip"),
-                scale(3),
-                anchor("center"),
-                pos(randi(24, width() - 24), 0),
-                area(),
-                body(),
-                "enemy",
-                {
-                    speed: 240,
-                    offset: 24,
-                    alive: true,
-                },
-                offscreen({ destroy: true }),
-                move(DOWN, randi(enemyMinSpeed, enemyMaxSpeed)),
-                fixed(),
-            ]);
-
-            e.onDestroy(() => {
-                if (e.alive && player.alive) {
-                    scoreLabel.trigger("scoreDown")
-                }
-            });
+            const e = createEnemy()
         });
     };
 
@@ -216,7 +192,6 @@ let gameplay = scene("Game", () => {
     });
 
     onKeyRelease("space", () => {
-        console.log(player)
         if (!player.onCoolDown && player.alive) {
             player.onCoolDown = true;
             spawnLaser(player.pos);
@@ -225,16 +200,27 @@ let gameplay = scene("Game", () => {
         }
     });
 
+
+    /* Come back to when implementing pausing? */
+    // onKeyRelease("p", () => {
+    //     let all = get("projectile")
+    //     for (const thing of all) {
+    //         thing.paused = true;
+    //     }
+    //     // player.paused = true;
+    //     console.log("PAUSING?")
+    // })
+
     spawnEnemy();
 
-    k.toggleDebug = () => {
+    const toggleDebug = () => {
         if (debug.inspect === true) {
             debug.inspect = false;
         } else {
             debug.inspect = true;
         }
     };
-    onKeyRelease("1", k.toggleDebug);
+    onKeyRelease("1", toggleDebug);
 });
 
 go("MainMenu");
