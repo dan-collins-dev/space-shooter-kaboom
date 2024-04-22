@@ -17,6 +17,14 @@ export const loadAssets = () => {
     loadSprite("playerShip", "./assets/sprites/playerShip.png");
     loadSprite("laser", "./assets/sprites/laser.png");
     loadSprite("enemyShip", "./assets/sprites/enemyShip.png");
+
+    loadSprite("explosion", "./assets/sprites/explosion-Sheet.png", {
+        sliceX: 9,
+        sliceY: 1,
+        anims: {
+            explode: {from: 0, to: 8}
+        }
+    });
     
     // Load Sounds
     loadSound("duck", "./assets/sounds/a-duck-walks-into-a-barn.ogg");

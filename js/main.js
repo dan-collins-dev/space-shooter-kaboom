@@ -1,6 +1,7 @@
 import { k, loadAssets } from "./modules/init.js"
 import { createPlayer } from "./modules/player.js";
-import { createEnemy, increaseEnemySpeed } from "./modules/enemy.js";
+import { createEnemy, increaseEnemySpeed, resetEnemySpeed } from "./modules/enemy.js";
+import { createExplosion } from "./modules/explosion.js";
 
 
 loadAssets()
@@ -63,13 +64,19 @@ let mainMenu = scene("MainMenu", () => {
         score = 0;
         go("Game");
     });
+
+    onSceneLeave(() => {
+        const allObjs = get("*", { recursive: true })
+        for (const obj of allObjs) {
+            destroy(obj);
+        }
+    })
 });
 
 
 // Main Gameplay Scene
 let gameplay = scene("Game", () => {
     const player = createPlayer()
-
 
     const enemySpeedTimer = add([
         timer(),
@@ -137,6 +144,22 @@ let gameplay = scene("Game", () => {
         scoreLabel.enterState("idle");
     })
 
+    scoreLabel.on("scoreUp", () => {
+        score += 1;
+        scoreLabel.text = `Score: ${score}`;
+        scoreLabel.enterState("expand")
+    })
+
+    scoreLabel.on("scoreDown", () => {
+        score -= 1;
+        if (score < 0) {
+            resetEnemySpeed()
+            go("MainMenu")
+        } 
+        scoreLabel.text = `Score: ${score}`;
+        scoreLabel.enterState("shrink");
+    })
+
     const spawnLaser = (playerPos) => {
         let laser = add([
             sprite("laser"),
@@ -155,6 +178,7 @@ let gameplay = scene("Game", () => {
 
         laser.onCollide("enemy", (enemy) => {
             enemy.alive = false;
+            createExplosion(enemy.pos)
             destroy(enemy);
             scoreLabel.trigger("scoreUp")
             destroy(laser);
@@ -167,18 +191,7 @@ let gameplay = scene("Game", () => {
         });
     };
 
-    scoreLabel.on("scoreUp", () => {
-        score += 1;
-        scoreLabel.text = `Score: ${score}`;
-        scoreLabel.enterState("expand")
-    })
-
-    scoreLabel.on("scoreDown", () => {
-        score -= 1;
-        if (score < 0) go("MainMenu")
-        scoreLabel.text = `Score: ${score}`;
-        scoreLabel.enterState("shrink");
-    })
+    
 
     onKeyDown("a", () => {
         if (player.pos.x <= player.offset) player.pos.x = player.offset;
@@ -221,6 +234,14 @@ let gameplay = scene("Game", () => {
         }
     };
     onKeyRelease("1", toggleDebug);
+
+
+    onSceneLeave(() => {
+        const allObjs = get("*", { recursive: true })
+        for (const obj of allObjs) {
+            destroy(obj);
+        }
+    })
 });
 
 go("MainMenu");

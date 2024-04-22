@@ -1,3 +1,6 @@
+import { createExplosion } from "./explosion.js";
+import { resetEnemySpeed } from "./enemy.js";
+
 export const createPlayer = () => {
     const player = add([
         sprite("playerShip"),
@@ -24,6 +27,8 @@ export const createPlayer = () => {
 
     player.on("death", () => {
         player.alive = false;
+        resetEnemySpeed()
+        createExplosion(player.pos)
         destroy(player);
         go("MainMenu")
     });

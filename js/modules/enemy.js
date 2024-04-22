@@ -39,3 +39,8 @@ export const increaseEnemySpeed = () => {
     enemyMinSpeed += 25
     enemyMaxSpeed += 50
 }
+
+export const resetEnemySpeed = () => {
+    enemyMinSpeed = 75;
+    enemyMaxSpeed = 100;
+}
