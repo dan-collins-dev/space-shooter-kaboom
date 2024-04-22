@@ -43,15 +43,25 @@ let mainMenu = scene("MainMenu", () => {
         state("zoom", ["zoom", "rotate"])        
     ]);
 
-    // titleMsg.onStateEnter("zoom", async () => {
-    //     await tween(
-    //         titleMsg.textSize,
-        // 32,
-        // 1,
-        // (currentSize) => titleMsg.textSize = currentSize,
-        // easings.linear
-    //     )
-    // })
+    const optionSelect = add([
+        pos(center().x, center().y),
+        anchor("center"),
+    ])
+
+    
+    optionSelect.add([
+        text("Start Game", {
+            size: 16,
+            font: "PressStart2P",
+        }),
+        pos(0, 0),
+        anchor("center")
+    ])
+
+    // optionSelect.add([
+    //     text("Test"),
+    //     anchor("center")
+    // ])
     
     titleMsg.tween(
         titleMsg.textSize,
