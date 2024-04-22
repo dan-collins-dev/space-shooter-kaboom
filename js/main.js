@@ -4,7 +4,6 @@ let score = 0;
 let enemySpawnDelay = 3;
 let fireDelay = 0.25;
 let dmgShakeFactor = 25;
-let isAlive = true;
 
 // Initialize Kaboom context
 kaboom({
@@ -33,7 +32,7 @@ loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");
 // Main Menu Scene
 let mainMenu = scene("MainMenu", () => {
     const titleMsg = add([
-        text("TEST", {
+        text("Infinity Shot", {
             size: 32,
             font: "PressStart2P",
         }),
@@ -42,6 +41,7 @@ let mainMenu = scene("MainMenu", () => {
     ]);
 
     onKeyDown("enter", () => {
+        score = 0;
         go("Game");
     });
 });
@@ -51,7 +51,34 @@ let mainMenu = scene("MainMenu", () => {
 
 // Main Gameplay Scene
 let gameplay = scene("Game", () => {
-    // play("duck", {loop: true});
+    const scoreBG = add([
+        pos(center().x, 16), 
+        rect(width(), 32), 
+        outline(4), 
+        area(),
+        color(0, 0, 0),
+        anchor("center"),
+        z(1),
+        fixed(),
+        "scoreLabel"
+    ]);
+
+    const scoreLabel = add([
+        text(`Score: ${score}`, {
+            size: 16,
+            font: "PressStart2P",
+        }),
+        anchor("center"),
+        pos(center().x, 16),
+        z(1),
+        fixed(),
+    ]);
+
+    onUpdate("scoreLabel", () => {
+        scoreLabel.text = `Score: ${score}`
+        if (score < 0) go("MainMenu")
+    })
+
     const player = add([
         sprite("playerShip"),
         scale(3),
@@ -62,6 +89,7 @@ let gameplay = scene("Game", () => {
         {
             speed: 240,
             offset: 24,
+            alive: true
         },
         health(3),
     ]);
@@ -79,11 +107,11 @@ let gameplay = scene("Game", () => {
             },
             move(UP, 200),
             fixed(),
-            offscreen({destroy: true})
+            offscreen({ destroy: true }),
         ]);
 
         laser.onCollide("enemy", (enemy) => {
-            enemy.alive = false
+            enemy.alive = false;
             destroy(enemy);
             score += 1;
             console.log(score);
@@ -97,23 +125,23 @@ let gameplay = scene("Game", () => {
                 sprite("enemyShip"),
                 scale(3),
                 anchor("center"),
-                pos(randi(24, gameWidth - 24), -200),
+                pos(randi(24, gameWidth - 24), 0),
                 area(),
                 body(),
                 "enemy",
                 {
                     speed: 240,
                     offset: 24,
-                    alive: true
+                    alive: true,
                 },
-                offscreen({destroy: true}),
+                offscreen({ destroy: true }),
                 move(DOWN, randi(100, 150)),
                 fixed(),
             ]);
 
             e.onDestroy(() => {
-                if (e.alive) score -= 1
-            })
+                if (e.alive && player.alive) score -= 1;
+            });
         });
     };
 
@@ -129,7 +157,7 @@ let gameplay = scene("Game", () => {
     });
 
     onKeyRelease("space", () => {
-        if (!player.onCoolDown && isAlive) {
+        if (!player.onCoolDown && player.alive) {
             player.onCoolDown = true;
             spawnLaser(player.pos);
         } else {
@@ -142,13 +170,10 @@ let gameplay = scene("Game", () => {
         player.hurt(1);
     });
 
-    player.on("hurt", () => {
-        console.log("OUCH");
-    });
-
     player.on("death", () => {
-        isAlive = false;
+        player.alive = false;
         destroy(player);
+        go("MainMenu")
     });
 
     spawnEnemy();
