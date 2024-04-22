@@ -166,6 +166,7 @@ let gameplay = scene("Game", () => {
     });
 
     player.onCollide("enemy", (e) => {
+        destroy(e);
         shake(dmgShakeFactor);
         player.hurt(1);
     });
