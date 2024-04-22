@@ -1,33 +1,12 @@
-const gameWidth = 480;
-const gameHeight = 640;
+import { k, loadAssets } from "./modules/init.js"
+import { createPlayer } from "./modules/player.js";
+
+
+loadAssets()
+
 let score = 0;
 let enemySpawnDelay = 3;
-let fireDelay = 0.25;
-let dmgShakeFactor = 25;
-
-// Initialize Kaboom context
-kaboom({
-    width: gameWidth,
-    height: gameHeight,
-    font: "sans-serif",
-    canvas: document.querySelector("#mycanvas"),
-    background: [0, 0, 0],
-    debug: true,
-    crisp: true,
-    // scale: 2
-});
-
-// Loading the sprites
-// NOTE: Down the line look into how to importing asesprite files work
-loadSprite("playerShip", "./assets/sprites/playerShip.png");
-loadSprite("laser", "./assets/sprites/laser.png");
-loadSprite("enemyShip", "./assets/sprites/enemyShip.png");
-
-// Load Sounds
-loadSound("duck", "./assets/sounds/a-duck-walks-into-a-barn.ogg");
-
-// Load font
-loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");
+let fireDelay = 0.01;
 
 // Main Menu Scene
 let mainMenu = scene("MainMenu", () => {
@@ -91,13 +70,13 @@ let gameplay = scene("Game", () => {
     let enemyMinSpeed = 75;
     let enemyMaxSpeed = 100;
 
-
+    const player = createPlayer()
 
     const enemySpeedTimer = add([
         timer(),
     ])
 
-    enemySpeedTimer.loop(60, () => {
+    enemySpeedTimer.loop(30, () => {
         enemyMinSpeed += 25
         enemyMaxSpeed += 50
     })
@@ -160,22 +139,6 @@ let gameplay = scene("Game", () => {
         scoreLabel.enterState("idle");
     })
 
-    const player = add([
-        sprite("playerShip"),
-        scale(3),
-        anchor("center"),
-        pos(center().x, gameHeight - 40),
-        area(),
-        "player",
-        {
-            speed: 240,
-            offset: 24,
-            alive: true
-        },
-        health(3),
-        timer(),
-    ]);
-
     const spawnLaser = (playerPos) => {
         let laser = add([
             sprite("laser"),
@@ -206,7 +169,7 @@ let gameplay = scene("Game", () => {
                 sprite("enemyShip"),
                 scale(3),
                 anchor("center"),
-                pos(randi(24, gameWidth - 24), 0),
+                pos(randi(24, width() - 24), 0),
                 area(),
                 body(),
                 "enemy",
@@ -236,6 +199,7 @@ let gameplay = scene("Game", () => {
 
     scoreLabel.on("scoreDown", () => {
         score -= 1;
+        if (score < 0) go("MainMenu")
         scoreLabel.text = `Score: ${score}`;
         scoreLabel.enterState("shrink");
     })
@@ -246,12 +210,13 @@ let gameplay = scene("Game", () => {
     });
 
     onKeyDown("d", () => {
-        if (player.pos.x >= gameWidth - player.offset)
-            player.pos.x = gameWidth - player.offset;
+        if (player.pos.x >= width() - player.offset)
+            player.pos.x = width() - player.offset;
         else player.move(player.speed, 0);
     });
 
     onKeyRelease("space", () => {
+        console.log(player)
         if (!player.onCoolDown && player.alive) {
             player.onCoolDown = true;
             spawnLaser(player.pos);
@@ -260,28 +225,16 @@ let gameplay = scene("Game", () => {
         }
     });
 
-    player.onCollide("enemy", (e) => {
-        destroy(e);
-        shake(dmgShakeFactor);
-        player.hurt(1);
-    });
-
-    player.on("death", () => {
-        player.alive = false;
-        destroy(player);
-        go("MainMenu")
-    });
-
     spawnEnemy();
 
-    toggleDebug = () => {
+    k.toggleDebug = () => {
         if (debug.inspect === true) {
             debug.inspect = false;
         } else {
             debug.inspect = true;
         }
     };
-    onKeyRelease("1", toggleDebug);
+    onKeyRelease("1", k.toggleDebug);
 });
 
 go("MainMenu");
