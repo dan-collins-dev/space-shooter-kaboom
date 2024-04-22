@@ -33,12 +33,41 @@ loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");
 let mainMenu = scene("MainMenu", () => {
     const titleMsg = add([
         text("Infinity Shot", {
-            size: 32,
+            size: 8, //32,
             font: "PressStart2P",
         }),
         anchor("center"),
         pos(center().x, 160),
+        timer(),
+        rotate(0),
+        state("zoom", ["zoom", "rotate"])        
     ]);
+
+    // titleMsg.onStateEnter("zoom", async () => {
+    //     await tween(
+    //         titleMsg.textSize,
+    //     32,
+    //     1,
+    //     (currentSize) => titleMsg.textSize = currentSize,
+    //     easings.linear
+    //     )
+    // })
+    
+    async = titleMsg.tween(
+        titleMsg.textSize,
+        32,
+        1,
+        (currentSize) => titleMsg.textSize = currentSize,
+        easings.linear
+    )
+
+    titleMsg.tween(
+        titleMsg.angle,
+        360,
+        1,
+        (currentAngle) => titleMsg.angle = currentAngle,
+        easings.linear
+    )
 
     onKeyDown("enter", () => {
         score = 0;
@@ -86,7 +115,10 @@ let gameplay = scene("Game", () => {
         fixed(),
     ]);
 
-    onUpdate("scoreLabel", () => {
+    // onUpdate("scoreLabel", () => {
+    // })
+    
+    onUpdate(()=> {
         scoreLabel.text = `Score: ${score}`
         if (score < 0) go("MainMenu")
     })
@@ -126,7 +158,6 @@ let gameplay = scene("Game", () => {
             enemy.alive = false;
             destroy(enemy);
             score += 1;
-            console.log(score);
             destroy(laser);
         });
     };
