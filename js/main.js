@@ -65,12 +65,12 @@ let mainMenu = scene("MainMenu", () => {
         go("Game");
     });
 
-    onSceneLeave(() => {
-        const allObjs = get("*", { recursive: true })
-        for (const obj of allObjs) {
-            destroy(obj);
-        }
-    })
+    // onSceneLeave(() => {
+    //     const allObjs = get("*", { recursive: true })
+    //     for (const obj of allObjs) {
+    //         destroy(obj);
+    //     }
+    // })
 });
 
 
@@ -208,6 +208,7 @@ let gameplay = scene("Game", () => {
         if (!player.onCoolDown && player.alive) {
             player.onCoolDown = true;
             spawnLaser(player.pos);
+            play("shoot", {volume: 0.1})
         } else {
             player.wait(fireDelay, () => (player.onCoolDown = false));
         }
@@ -235,13 +236,14 @@ let gameplay = scene("Game", () => {
     };
     onKeyRelease("1", toggleDebug);
 
-
-    onSceneLeave(() => {
-        const allObjs = get("*", { recursive: true })
-        for (const obj of allObjs) {
-            destroy(obj);
-        }
-    })
+    // Not exactly sure if destroying all objects needs
+    // to be explicitly called on scene leave
+    // onSceneLeave(() => {
+    //     const allObjs = get("*", { recursive: true })
+    //     for (const obj of allObjs) {
+    //         destroy(obj);
+    //     }
+    // })
 });
 
 go("MainMenu");

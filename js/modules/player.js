@@ -20,6 +20,7 @@ export const createPlayer = () => {
     ]);
 
     player.onCollide("enemy", (e) => {
+        createExplosion(e.pos)
         destroy(e);
         shake(player.dmgShakeFactor);
         player.hurt(1);

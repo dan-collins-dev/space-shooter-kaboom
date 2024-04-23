@@ -28,6 +28,8 @@ export const loadAssets = () => {
     
     // Load Sounds
     loadSound("duck", "./assets/sounds/a-duck-walks-into-a-barn.ogg");
+    loadSound("explosion", "./assets/sounds/explosion.wav")
+    loadSound("shoot", "./assets/sounds/laserShoot.wav")
     
     // Load font
     loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");

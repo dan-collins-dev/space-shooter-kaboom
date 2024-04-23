@@ -5,7 +5,9 @@ export const createExplosion = (position) => {
         pos(position.x, position.y),
         anchor("center"),
         area(),
-        lifespan(1)
+        lifespan(1),
+        fixed(),
     ])
+    play("explosion", {volume: 0.1})
     return boom;
 }
