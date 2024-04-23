@@ -2,6 +2,7 @@ import { k, loadAssets } from "./modules/init.js"
 import { createPlayer } from "./modules/player.js";
 import { createEnemy, increaseEnemySpeed, resetEnemySpeed } from "./modules/enemy.js";
 import { createExplosion } from "./modules/explosion.js";
+import { createLaser } from "./modules/laser.js";
 
 
 loadAssets()
@@ -160,31 +161,6 @@ let gameplay = scene("Game", () => {
         scoreLabel.enterState("shrink");
     })
 
-    const spawnLaser = (playerPos) => {
-        let laser = add([
-            sprite("laser"),
-            scale(2),
-            anchor("center"),
-            pos(playerPos.x, playerPos.y - 25),
-            area(),
-            "projectile",
-            {
-                onCoolDown: false,
-            },
-            move(UP, 200),
-            fixed(),
-            offscreen({ destroy: true }),
-        ]);
-
-        laser.onCollide("enemy", (enemy) => {
-            enemy.alive = false;
-            createExplosion(enemy.pos)
-            destroy(enemy);
-            scoreLabel.trigger("scoreUp")
-            destroy(laser);
-        });
-    };
-
     const spawnEnemy = () => {
         loop(enemySpawnDelay, () => {
             const e = createEnemy()
@@ -207,7 +183,7 @@ let gameplay = scene("Game", () => {
     onKeyRelease("space", () => {
         if (!player.onCoolDown && player.alive) {
             player.onCoolDown = true;
-            spawnLaser(player.pos);
+            createLaser(player.pos);
             play("shoot", {volume: 0.1})
         } else {
             player.wait(fireDelay, () => (player.onCoolDown = false));
