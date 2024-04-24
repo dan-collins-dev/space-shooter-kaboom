@@ -10,30 +10,31 @@ export const k = kaboom({
     debug: true,
     crisp: true,
     // scale: 2
-    score: 0,
 });
+
+
 
 export const loadAssets = () => {
     // Load sprites
     loadSprite("playerShip", "./assets/sprites/playerShip.png");
     loadSprite("laser", "./assets/sprites/laser.png");
     loadSprite("enemyShip", "./assets/sprites/enemyShip.png");
-    loadSprite("cursor", "./assets/sprites/selectCursor.png")
+    loadSprite("cursor", "./assets/sprites/selectCursor.png");
 
     loadSprite("explosion", "./assets/sprites/explosion-Sheet.png", {
         sliceX: 9,
         sliceY: 1,
         anims: {
-            explode: {from: 0, to: 8}
-        }
+            explode: { from: 0, to: 8 },
+        },
     });
-    
+
     // Load Sounds
     loadSound("duck", "./assets/sounds/a-duck-walks-into-a-barn.ogg");
-    loadSound("explosion", "./assets/sounds/explosion.wav")
-    loadSound("shoot", "./assets/sounds/laserShoot.wav")
-    loadSound("selectSound", "./assets/sounds/selectSound.wav")
-    
+    loadSound("explosion", "./assets/sounds/explosion.wav");
+    loadSound("shoot", "./assets/sounds/laserShoot.wav");
+    loadSound("selectSound", "./assets/sounds/selectSound.wav");
+
     // Load font
     loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");
 
@@ -41,7 +42,7 @@ export const loadAssets = () => {
     //     volume: 0.1,
     //     loop: true
     // })
-}
+};
 
 export const toggleDebug = () => {
     if (debug.inspect === true) {

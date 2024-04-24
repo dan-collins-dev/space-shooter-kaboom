@@ -1,4 +1,5 @@
-import { k } from "../init.js";
+import { k} from "../init.js";
+import { data } from "../data.js";
 
 let enemyMinSpeed = 75;
 let enemyMaxSpeed = 100;
@@ -7,6 +8,7 @@ export const createEnemy = () => {
 
     const playerRef = k.get("player")
     const scoreRef = k.get("score")
+    
 
     let enemy = add([
         sprite("enemyShip"),
@@ -21,14 +23,16 @@ export const createEnemy = () => {
             offset: 24,
             alive: true,
         },
-        offscreen({ destroy: true }),
+        offscreen({ destroy: true, distance: 32}),
         move(DOWN, randi(enemyMinSpeed, enemyMaxSpeed)),
         fixed(),
     ]);
 
     enemy.onDestroy(() => {
-        if (enemy.alive && playerRef[0].alive) {
-            scoreRef[0].trigger("scoreDown")
+        if (enemy.alive === true && playerRef[0].alive === true) {
+            if (data.gameOver === false) {
+                scoreRef[0].trigger("scoreDown")
+            }
         }
     });
 

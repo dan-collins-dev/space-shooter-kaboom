@@ -1,4 +1,5 @@
-import { k, toggleDebug } from "../init.js";
+import { k, toggleDebug} from "../init.js";
+import { data } from "../data.js";
 
 export const mainMenu = scene("MainMenu", () => {
     let receiveInput = false;
@@ -95,7 +96,7 @@ export const mainMenu = scene("MainMenu", () => {
 
     onKeyRelease("enter", () => {
         if (receiveInput === true) {
-            k.score = 0;
+            data.score = 0;
             if (selectIndex === 0) go("Game");
             else console.log("NOT IMPLEMENTED");
         }

@@ -1,5 +1,7 @@
 import { createExplosion } from "./explosion.js";
 import { resetEnemySpeed } from "./enemy.js";
+import { k } from "../init.js";
+import { data } from "../data.js";
 
 export const createPlayer = () => {
     const player = add([
@@ -30,6 +32,7 @@ export const createPlayer = () => {
         player.alive = false;
         resetEnemySpeed()
         createExplosion(player.pos)
+        data.gameOver = true
         destroy(player);
         go("GameOver")
     });
