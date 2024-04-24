@@ -1,4 +1,4 @@
-import { k, loadAssets } from "./modules/init.js"
+import { k, loadAssets, toggleDebug } from "./modules/init.js"
 import { createPlayer } from "./modules/player.js";
 import { createEnemy, increaseEnemySpeed, resetEnemySpeed } from "./modules/enemy.js";
 // import { createExplosion } from "./modules/explosion.js";
@@ -134,7 +134,6 @@ let gameplay = scene("Game", () => {
         });
     };
 
-    
 
     onKeyDown("a", () => {
         if (player.pos.x <= player.offset) player.pos.x = player.offset;
@@ -159,13 +158,6 @@ let gameplay = scene("Game", () => {
 
     spawnEnemy();
 
-    const toggleDebug = () => {
-        if (debug.inspect === true) {
-            debug.inspect = false;
-        } else {
-            debug.inspect = true;
-        }
-    };
     onKeyRelease("1", toggleDebug);
 });
 
