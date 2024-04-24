@@ -96,7 +96,7 @@ export const mainMenu = scene("MainMenu", () => {
 
     onKeyRelease("enter", () => {
         if (receiveInput === true) {
-            // data.score = 0;
+            data.score = 0;
             if (selectIndex === 0) go("Game");
             else console.log("NOT IMPLEMENTED");
         }
@@ -111,7 +111,7 @@ export const mainMenu = scene("MainMenu", () => {
                 selectCursor.pos = selectCursor.startPos;
                 selectIndex = 0;
             }
-            play("selectSound");
+            play("selectSound", {volume: 0.1});
         }
     });
 
@@ -124,9 +124,7 @@ export const mainMenu = scene("MainMenu", () => {
                 selectCursor.pos = selectCursor.startPos;
                 selectIndex = 0;
             }
-            play("selectSound");
+            play("selectSound", {volume: 0.1});
         }
     });
-
-    onKeyRelease("1", toggleDebug);
 });

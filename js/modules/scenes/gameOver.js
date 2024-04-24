@@ -2,8 +2,9 @@ import { data } from "../data.js"
 import { k } from "../init.js";
 
 export const gameOver = scene("GameOver", () => {
+    let receiveInput = false
     let states = add([
-        state("idle", ["idle", "showScore"]),
+        state("idle", ["idle", "showScore", "done"]),
         timer(),
     ])
     let num = 0;
@@ -18,29 +19,50 @@ export const gameOver = scene("GameOver", () => {
         opacity(0)
     ])
 
+    const backMsg = add([
+        text("Spacebar to Menu", {
+            size: 16,
+            font: "PressStart2P",
+        }),
+        pos(width() / 2, height() - 32),
+        anchor("center"),
+        timer(),
+        opacity(0)
+    ])
+
     states.onStateEnter("idle", () => {
-        states.wait(3, () => {
+        states.wait(1, () => {
             states.enterState("showScore")
         })
-        
-        
     })
 
-    states.onStateEnter("showScore", () => {
+    states.onStateEnter("showScore", async () => {
         msg.opacity = 1
-        console.log(msg)
 
-        msg.tween(
+        await msg.tween(
             num,
             data.score,
-            5,
+            3,
             (currentNum) => num = currentNum,
             easings.linear
         )
-    }) 
+
+        states.enterState("done")
+    })
+
+    states.onStateEnter("done", () => {
+        backMsg.opacity = 1
+        receiveInput = true;
+    })
 
     states.onStateUpdate("showScore", () => {
         msg.text = `Score: ${num.toFixed(0)}`;
+    })
+
+    onKeyRelease("space", () => {
+        if (receiveInput === true) {
+            go("MainMenu")
+        }
     })
 })
 

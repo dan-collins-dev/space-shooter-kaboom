@@ -76,13 +76,13 @@ export const gameplay = scene("Game", () => {
     })
 
     scoreLabel.on("scoreUp", () => {
-        data.score += 1;
+        data.score += 100;
         scoreLabel.text = `Score: ${data.score}`;
         scoreLabel.enterState("expand")
     })
 
     scoreLabel.on("scoreDown", () => {
-        data.score -= 1;
+        data.score -= 50;
         if (data.score < 0) {
             data.score = 0
             resetEnemySpeed()

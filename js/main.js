@@ -12,3 +12,4 @@ loadAssets()
 
 
 go("MainMenu")
+// go("GameOver")
