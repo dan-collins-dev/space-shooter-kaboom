@@ -10,6 +10,7 @@ export const k = kaboom({
     debug: true,
     crisp: true,
     // scale: 2
+    score: 0
 });
 
 export const loadAssets = () => {
@@ -33,4 +34,10 @@ export const loadAssets = () => {
     
     // Load font
     loadFont("PressStart2P", "./assets/fonts/PressStart2P-Regular.ttf");
+
+    // const music = play("duck", {
+    //     volume: 0.1,
+    //     loop: true
+    // })
+
 }

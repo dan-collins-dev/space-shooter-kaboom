@@ -31,7 +31,7 @@ export const createPlayer = () => {
         resetEnemySpeed()
         createExplosion(player.pos)
         destroy(player);
-        go("MainMenu")
+        go("GameOver")
     });
 
     return player

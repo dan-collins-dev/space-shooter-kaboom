@@ -1,8 +1,9 @@
 import { k, loadAssets } from "./modules/init.js"
 import { createPlayer } from "./modules/player.js";
 import { createEnemy, increaseEnemySpeed, resetEnemySpeed } from "./modules/enemy.js";
-import { createExplosion } from "./modules/explosion.js";
+// import { createExplosion } from "./modules/explosion.js";
 import { createLaser } from "./modules/laser.js";
+import { mainMenu } from "./modules/scenes/mainMenu.js";
 
 
 loadAssets()
@@ -11,68 +12,34 @@ let score = 0;
 let enemySpawnDelay = 3;
 let fireDelay = 0.01;
 
-// Main Menu Scene
-let mainMenu = scene("MainMenu", () => {
-    const titleMsg = add([
-        text("Infinity Shot", {
-            size: 8,
-            font: "PressStart2P",
-        }),
-        anchor("center"),
-        pos(center().x, 160),
-        timer(),
-        rotate(0),
-        state("zoom", ["zoom", "rotate"])        
-    ]);
-
-    const optionSelect = add([
-        pos(center().x, center().y),
-        anchor("center"),
+// Game Over Scene (also testing for states)
+let gameOver = scene("GameOver", () => {
+    let states = add([
+        state("idle", ["idle", "keypress"]),
     ])
 
-    
-    optionSelect.add([
-        text("Start Game", {
+    let msg = add([
+        text(`Score: ${score}`, {
             size: 16,
             font: "PressStart2P",
         }),
-        pos(0, 0),
-        anchor("center")
+        pos(width() / 2, height() / 2),
+        anchor("center"),
     ])
 
-    // optionSelect.add([
-    //     text("Test"),
-    //     anchor("center")
-    // ])
-    
-    titleMsg.tween(
-        titleMsg.textSize,
-        32,
-        1,
-        (currentSize) => titleMsg.textSize = currentSize,
-        easings.linear
-    )
+    states.onStateEnter("idle", () => {
 
-    titleMsg.tween(
-        titleMsg.angle,
-        360,
-        1,
-        (currentAngle) => titleMsg.angle = currentAngle,
-        easings.linear
-    )
+    })
 
-    onKeyDown("enter", () => {
-        score = 0;
-        go("Game");
-    });
+    states.onStateEnter("keypress", () => {
+        console.log("entering keypress state")
+    })
 
-    // onSceneLeave(() => {
-    //     const allObjs = get("*", { recursive: true })
-    //     for (const obj of allObjs) {
-    //         destroy(obj);
-    //     }
-    // })
-});
+    onKeyRelease("a", () => states.enterState("keypress"))
+})
+
+// Main Menu Scene
+
 
 
 // Main Gameplay Scene
@@ -155,7 +122,7 @@ let gameplay = scene("Game", () => {
         score -= 1;
         if (score < 0) {
             resetEnemySpeed()
-            go("MainMenu")
+            go("GameOver")
         } 
         scoreLabel.text = `Score: ${score}`;
         scoreLabel.enterState("shrink");
@@ -186,20 +153,9 @@ let gameplay = scene("Game", () => {
             createLaser(player.pos);
             play("shoot", {volume: 0.1})
         } else {
-            player.wait(fireDelay, () => (player.onCoolDown = false));
+            player.wait(fireDelay, () => player.onCoolDown = false);
         }
     });
-
-
-    /* Come back to when implementing pausing? */
-    // onKeyRelease("p", () => {
-    //     let all = get("projectile")
-    //     for (const thing of all) {
-    //         thing.paused = true;
-    //     }
-    //     // player.paused = true;
-    //     console.log("PAUSING?")
-    // })
 
     spawnEnemy();
 
@@ -211,15 +167,6 @@ let gameplay = scene("Game", () => {
         }
     };
     onKeyRelease("1", toggleDebug);
-
-    // Not exactly sure if destroying all objects needs
-    // to be explicitly called on scene leave
-    // onSceneLeave(() => {
-    //     const allObjs = get("*", { recursive: true })
-    //     for (const obj of allObjs) {
-    //         destroy(obj);
-    //     }
-    // })
 });
 
-go("MainMenu");
+go("MainMenu")
