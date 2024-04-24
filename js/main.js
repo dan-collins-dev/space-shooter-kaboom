@@ -1,8 +1,8 @@
 import { k, loadAssets, toggleDebug } from "./modules/init.js"
-import { createPlayer } from "./modules/player.js";
-import { createEnemy, increaseEnemySpeed, resetEnemySpeed } from "./modules/enemy.js";
+import { createPlayer } from "./modules/entities/player.js";
+import { createEnemy, increaseEnemySpeed, resetEnemySpeed } from "./modules/entities/enemy.js";
 // import { createExplosion } from "./modules/explosion.js";
-import { createLaser } from "./modules/laser.js";
+import { createLaser } from "./modules/entities/laser.js";
 import { mainMenu } from "./modules/scenes/mainMenu.js";
 
 

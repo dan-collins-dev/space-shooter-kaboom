@@ -1,4 +1,4 @@
-import { k } from "./init.js";
+import { k } from "../init.js";
 
 let enemyMinSpeed = 75;
 let enemyMaxSpeed = 100;

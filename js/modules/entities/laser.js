@@ -1,5 +1,5 @@
 import { createExplosion } from "./explosion.js";
-import { k } from "./init.js";
+import { k } from "../init.js";
 
 export const createLaser = (playerPos) => {
     const scoreRef = k.get("score")
