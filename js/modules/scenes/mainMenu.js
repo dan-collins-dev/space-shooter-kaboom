@@ -96,7 +96,7 @@ export const mainMenu = scene("MainMenu", () => {
 
     onKeyRelease("enter", () => {
         if (receiveInput === true) {
-            data.score = 0;
+            // data.score = 0;
             if (selectIndex === 0) go("Game");
             else console.log("NOT IMPLEMENTED");
         }

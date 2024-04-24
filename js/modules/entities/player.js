@@ -1,5 +1,6 @@
 import { createExplosion } from "./explosion.js";
 import { resetEnemySpeed } from "./enemy.js";
+import { gameOver } from "../scenes/gameOver.js";
 import { k } from "../init.js";
 import { data } from "../data.js";
 
