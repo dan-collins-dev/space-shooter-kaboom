@@ -20,6 +20,11 @@ export const loadAssets = () => {
     loadSprite("laser", "./assets/sprites/laser.png");
     loadSprite("enemyShip", "./assets/sprites/enemyShip.png");
     loadSprite("cursor", "./assets/sprites/selectCursor.png");
+    loadSprite("spaceIdle", "./assets/sprites/spacebar.png");
+    loadSprite("spacePressed", "./assets/sprites/spacebarPressed.png")
+    loadSprite("keyIdle", "./assets/sprites/keyIdle.png")
+    loadSprite("keyPressed", "./assets/sprites/keyPressed.png")
+
 
     loadSprite("explosion", "./assets/sprites/explosion-Sheet.png", {
         sliceX: 9,
