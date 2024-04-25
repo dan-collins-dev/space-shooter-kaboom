@@ -9,10 +9,7 @@ export const k = kaboom({
     background: [0, 0, 0],
     debug: true,
     crisp: true,
-    // scale: 2
 });
-
-
 
 export const loadAssets = () => {
     // Load sprites

@@ -1,5 +1,4 @@
 import { data } from "../data.js"
-import { k } from "../init.js";
 
 export const gameOver = scene("GameOver", () => {
     let receiveInput = false

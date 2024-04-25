@@ -1,8 +1,7 @@
 import { createExplosion } from "./explosion.js";
-import { k } from "../init.js";
 
 export const createLaser = (playerPos) => {
-    const scoreRef = k.get("score")
+    const scoreRef = get("score")
 
     const laser = add([
         sprite("laser"),

@@ -1,4 +1,3 @@
-import { k, toggleDebug} from "../init.js";
 import { data } from "../data.js";
 import { controlsMenu } from "./controls.js";
 

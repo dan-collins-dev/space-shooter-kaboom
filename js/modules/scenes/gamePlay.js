@@ -1,7 +1,6 @@
 import { createPlayer } from "../entities/player.js";
 import { createEnemy, increaseEnemySpeed, resetEnemySpeed } from "../entities/enemy.js";
 import { createLaser } from "../entities/laser.js";
-import { k } from "../init.js";
 import { data } from "../data.js";
 
 export const gameplay = scene("Game", () => {
@@ -121,6 +120,4 @@ export const gameplay = scene("Game", () => {
     });
 
     spawnEnemy();
-
-    // onKeyRelease("1", toggleDebug);
 });

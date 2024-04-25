@@ -1,4 +1,3 @@
-import { k} from "../init.js";
 import { data } from "../data.js";
 
 let enemyMinSpeed = 75;
@@ -6,8 +5,8 @@ let enemyMaxSpeed = 100;
 
 export const createEnemy = () => {
 
-    const playerRef = k.get("player")
-    const scoreRef = k.get("score")
+    const playerRef = get("player")
+    const scoreRef = get("score")
     
 
     let enemy = add([
