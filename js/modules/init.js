@@ -22,9 +22,16 @@ export const loadAssets = () => {
     loadSprite("cursor", "./assets/sprites/selectCursor.png");
     loadSprite("spaceIdle", "./assets/sprites/spacebar.png");
     loadSprite("spacePressed", "./assets/sprites/spacebarPressed.png")
-    loadSprite("keyIdle", "./assets/sprites/keyIdle.png")
-    loadSprite("keyPressed", "./assets/sprites/keyPressed.png")
 
+    loadSprite("key", "./assets/sprites/btn-Sheet.png", {
+        sliceX: 2,
+        sliceY: 1,
+    })
+
+    loadSprite("spacebar", "./assets/sprites/spaceBtn-Sheet.png", {
+        sliceX: 2,
+        sliceY: 1
+    })
 
     loadSprite("explosion", "./assets/sprites/explosion-Sheet.png", {
         sliceX: 9,

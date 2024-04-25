@@ -95,7 +95,7 @@ export const mainMenu = scene("MainMenu", () => {
         area(),
     ]);
 
-    onKeyRelease("enter", () => {
+    onKeyRelease("space", () => {
         if (receiveInput === true) {
             data.score = 0;
             if (selectIndex === 0) go("Game");
