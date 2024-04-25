@@ -6,6 +6,16 @@ export const gameOver = scene("GameOver", () => {
         state("idle", ["idle", "showScore", "done"]),
         timer(),
     ])
+
+    const gameOverLbl = add([
+        text("Game Over", {
+            size: 32,
+            font: "PressStart2P",
+        }),
+        pos(width()/ 2, height() / 4),
+        anchor("center")
+    ])
+
     let num = 0;
     let msg = add([
         text(`Score: ${num}`, {

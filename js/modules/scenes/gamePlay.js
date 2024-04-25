@@ -120,4 +120,6 @@ export const gameplay = scene("Game", () => {
     });
 
     spawnEnemy();
+
+
 });
